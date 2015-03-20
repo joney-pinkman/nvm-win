@@ -1,0 +1,31 @@
+{
+  "name": "nvm-win",
+  "version": "0.0.1",
+  "description": "switch node version easily on windows,type 'nvm-win' in cmd to use it.",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^2.7.1",
+    "request": "^2.53.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joney-pinkman/nvm-win.git"
+  },
+  "keywords": [
+    "nvm",
+    "windows",
+    "version control"
+  ],
+  "author": "joney-pinkman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joney-pinkman/nvm-win/issues"
+  },
+  "homepage": "https://github.com/joney-pinkman/nvm-win"
+}
