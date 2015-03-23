@@ -1,8 +1,10 @@
 {
   "name": "nvm-win",
-  "version": "0.0.1",
+  "version": "0.2.2",
   "description": "switch node version easily on windows,type 'nvm-win' in cmd to use it.",
-  "main": "index.js",
+  "bin": {
+      "nvm-win": "./cli.js"
+  },
   "dependencies": {
     "commander": "^2.7.1",
     "request": "^2.53.0"
@@ -10,6 +12,11 @@
   "devDependencies": {
     "mocha": "^2.2.1"
   },
+  "engines":{
+      "node": ">= 0.8.x"
+  },
+    "os" : [ "win32" ],
+    "cpu" : [ "x64", "ia32" ],
   "scripts": {
     "test": "mocha"
   },

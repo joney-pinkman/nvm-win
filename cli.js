@@ -1,6 +1,5 @@
-/**
- * Created by Administrator on 15-3-14.
- */
+#!/usr/bin/env node
+
 var program = require('commander'),
     fs = require('fs'),
     path = require('path'),

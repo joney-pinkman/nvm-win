@@ -36,15 +36,28 @@ module.exports = {
 function init(cb){
     var versionCurr = process.version.slice(1),
         nodePath = process.execPath;
-    fs.copyFile(nodePath,getVersionPath(versionCurr),true,function(e1){
-        if(e1) return cb(e1);
-        fs.copyFile(nodePath,nodeTmpPath,true,function(e2){
-            if(e2) return cb(e2);
-            config['node_path'] = nodePath;
-            config['node_curr'] = versionCurr;
-            fs.writeFile(configPath,JSON.stringify(config),{flag:'w+'},cb);
+    fs.copyFile(path.join(__dirname,'../bash/nvm-win'),path.join(__dirname,'../../../'),true,function(e){
+        if(e) return cb(e);
+        fs.copyFile(path.join(__dirname,'../bash/nvm-win.cmd'),path.join(__dirname,'../../../'),true,function(e){
+            if(e) return cb(e);
+            fs.copyFile(nodePath,getVersionPath(versionCurr),true,function(e1){
+                if(e1) return cb(e1);
+                fs.exists(nodeTmpPath,function(exists){
+                    if(exists) return cb();
+
+                    fs.copyFile(nodePath,nodeTmpPath,true,function(e2){
+                        if(e2) return cb(e2);
+                        config['node_path'] = nodePath;
+                        config['node_curr'] = versionCurr;
+                        fs.writeFile(configPath,JSON.stringify(config),{flag:'w+'},cb);
+                    });
+                });
+
+            });
         });
     });
+
+
 }
 function uninstall(version,cb){
 

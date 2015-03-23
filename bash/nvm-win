@@ -1,0 +1,16 @@
+#!/bin/sh
+
+basedir=`dirname "$0"`
+
+case `uname` in
+    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
+esac
+
+if [ -x "$basedir/node_modules/nvm-win/nodeTmp" ]; then
+  "$basedir/node_modules/nvm-win/nodeTmp"  "$basedir/node_modules/nvm-win/cli.js" "$@"
+  ret=$?
+else
+  node  "$basedir/node_modules/nvm-win/cli.js" "$@"
+  ret=$?
+fi
+exit $ret
