@@ -36,8 +36,10 @@ module.exports = {
 function init(cb){
     var versionCurr = process.version.slice(1),
         nodePath = process.execPath;
+    //edit for git bash
     fs.copyFile(path.join(__dirname,'../bash/nvm-win'),path.join(__dirname,'../../../'),true,function(e){
         if(e) return cb(e);
+        //edit for windows cmd shell
         fs.copyFile(path.join(__dirname,'../bash/nvm-win.cmd'),path.join(__dirname,'../../../'),true,function(e){
             if(e) return cb(e);
             fs.copyFile(nodePath,getVersionPath(versionCurr),true,function(e1){
@@ -56,7 +58,6 @@ function init(cb){
             });
         });
     });
-
 
 }
 function uninstall(version,cb){
@@ -121,7 +122,7 @@ function use(version,isAuto,cb){
             }
         }else{
             fs.copyFile(getVersionPath(version),config.node_path,true,function(e){
-                if(e) return cb(e);
+                if(e) return cb(new Error('you perhaps execute the node with the current version,please close the process and try it again.'));
                 config['node_curr'] = version;
                 fs.writeFile(configPath,JSON.stringify(config),function(e){
                     if(e) return cb(e);
@@ -160,7 +161,7 @@ function getLatest(cb){
         if(res.statusCode !== 200){
             return cb(new Error('the statusCode of request https://nodejs.org is ' + res.statusCode + ',please check the Internet environment'));
         }
-
+        // get latest version from https://nodejs.org
         var matches = body.match(/Current Version:\sv([0-9\.]+)/m);
         if(matches && matches.length > 1){
             fs.exists(getVersionPath(matches[1]),function(exists){
@@ -196,6 +197,7 @@ function download(version,cb){
             fileSize = res['headers']['content-length'];
             rStream.pipe(fs.createWriteStream(src));
             process.stdout.write('\tdownload start\n\t');
+            process.stdout.write('\t--------------------\n\t');
             interval = setInterval(function(){
                 for(var i = showTagNum, length = Math.floor(progress/5) ; i < length;i++){
                     process.stdout.write('#');
