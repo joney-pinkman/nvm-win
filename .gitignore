@@ -1,5 +1,10 @@
 # Logs
+
 .idea
+version
+nodeTmp.exe
+config.json
+
 logs
 *.log
 

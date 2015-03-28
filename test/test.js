@@ -21,16 +21,21 @@ describe('nvm-win',function(){
         it('should create a folder named \'version\', a config json file recorded the nodeJs execute path and current version.',function(done){
              nvm.init(function(e){
                  if(e) return done(e);
-                 var existsPath = fs.existsSync('./version');
-                 var existsConfig = fs.existsSync('./config.json');
-                 var config = require('../config.json');
+                 try{
+                     var existsPath = fs.existsSync('../version');
+                     var existsConfig = fs.existsSync('../config.json');
+                     var config = require('../config.json');
 
-                 if(existsPath && existsConfig &&
-                     config.node_path == process.execPath &&
-                     config.node_curr == process.version.slice(1)){
+                     if(existsPath && existsConfig &&
+                         config.node_path == process.execPath &&
+                         config.node_curr == process.version.slice(1)){
 
-                     done();
+                         done();
+                     }
+                 }catch(e){
+                     done(e);
                  }
+
 
              })
         });
@@ -85,9 +90,17 @@ describe('nvm-win',function(){
     });
 
     after(function(done){
-        fs.unlinkSync('./config.json');
-        fs.unlinkSync('./nodeTmp.exe');
-        fs.deleteFolder('./version',done);
+        try{
+            if(fs.existsSync('../config.json')){
+                fs.unlinkSync('../config.json');
+            }
+            if(fs.existsSync('../nodeTmp.exe')){
+                fs.unlinkSync('../nodeTmp.exe');
+            }
+            fs.deleteFolder('./version',done);
+        }catch(e){
+            done(e);
+        }
     });
 });
 

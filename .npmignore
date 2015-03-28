@@ -1,5 +1,10 @@
 lib-cov
+
 .idea
+version
+nodeTmp.exe
+config.json
+
 *.seed
 *.log
 *.csv

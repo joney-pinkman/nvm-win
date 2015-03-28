@@ -60,9 +60,42 @@ function init(cb){
     });
 
 }
+
+function versionParse(version){
+    if(!version) return false;
+    if(version.indexOf('.') <= 0){
+        version = parseInt(version);
+        if(isNaN(version) || version > 12){
+            return false;
+        }else{
+            return '0.'+version+'.0';
+        }
+    }else{
+        var verArr = version.split('.');
+
+        for(var i =0; i < verArr.length; i++){
+            verArr[i] = parseInt(verArr[i]);
+            if(isNaN(verArr[i])){
+                return false;
+            }
+        }
+        if(verArr.length == 2){
+            return '0.' + verArr[0] + '.' + verArr[1];
+        }else{
+            return verArr[0] + '.' + verArr[1] + '.' + verArr[2];
+        }
+
+    }
+}
+
 function uninstall(version,cb){
 
     if(version !== 'all'){
+
+        version = versionParse(version);
+        if(!version){
+            return cb(new Error('can\'t parse the version you input'));
+        }
         var path = getVersionPath(version);
         fs.exists(path,function(exists){
             if(!exists){
@@ -112,6 +145,10 @@ function list(cb){
 }
 function use(version,isAuto,cb){
 
+    version = versionParse(version);
+    if(!version){
+        return cb(new Error('can\'t parse the version you input'));
+    }
     fs.exists(getVersionPath(version),function(exists){
         if(!exists){
             if(!isAuto){
@@ -136,23 +173,33 @@ function use(version,isAuto,cb){
 }
 
 function install(version,cb){
-    // if exists
-    fs.exists(getVersionPath(version),function(exists){
-        if(exists){
-            return cb(new Error('the version has been installed.'));
-        }
-        if(version  == 'latest'){
-            return getLatest(function(e,version){
-                if(e) return cb(e);
-                download(version,cb);
+
+    if(version == 'latest'){
+        getLatest(function(e,version){
+            if(e) return cb(e);
+
+            fs.exists(getVersionPath(version),function(exists){
+                if(exists){
+                    return cb(new Error('the latest version '+ version+' has been installed'));
+                }else{
+                    download(version,cb);
+                }
             });
-        }else{
-            //request
-            download(version,cb);
+        });
+    }else{
+        version = versionParse(version);
+        if(!version){
+            return cb(new Error('can\'t parse the version you input'));
         }
-    })
 
-
+        fs.exists(getVersionPath(version),function(exists){
+            if(exists){
+                return cb(new Error('the version '+ version +' has been installed.'));
+            }else{
+                download(version,cb);
+            }
+        });
+    }
 }
 
 function getLatest(cb){
@@ -177,6 +224,7 @@ function getLatest(cb){
     });
 }
 function download(version,cb){
+
     var requestUrl =  'http://nodejs.org/dist/v'+version;
     var rStream,fileSize = 0,bytesAccept = 0;
     if(process.arch.toLowerCase() == 'x64'){
@@ -196,7 +244,7 @@ function download(version,cb){
             }
             fileSize = res['headers']['content-length'];
             rStream.pipe(fs.createWriteStream(src));
-            process.stdout.write('\tdownload start\n\t');
+            process.stdout.write('\tdownload start\n');
             process.stdout.write('\t--------------------\n\t');
             interval = setInterval(function(){
                 for(var i = showTagNum, length = Math.floor(progress/5) ; i < length;i++){

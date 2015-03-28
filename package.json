@@ -1,6 +1,6 @@
 {
   "name": "nvm-win",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "switch node version easily on windows,type 'nvm-win' in cmd to use it.",
   "bin": {
       "nvm-win": "./cli.js"
