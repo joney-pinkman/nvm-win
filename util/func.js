@@ -226,9 +226,17 @@ function getLatest(cb){
 function download(version,cb){
 
     var requestUrl =  'http://nodejs.org/dist/v'+version;
-    var rStream,fileSize = 0,bytesAccept = 0;
-    if(process.arch.toLowerCase() == 'x64'){
-        requestUrl += '/x64'
+    var rStream, fileSize = 0, bytesAccept = 0;
+    if (version[0] === '0') {
+      if (process.arch.toLowerCase() == 'x64') {
+        requestUrl += '/x64';
+      }
+    } else {
+      if (process.arch.toLowerCase() == 'x64') {
+        requestUrl += '/win-x64';
+      } else {
+        requestUrl += '/win-x86';
+      }
     }
     requestUrl += '/node.exe';
     var progress = 0,showTagNum = 0,
